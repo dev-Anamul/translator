@@ -1,0 +1,114 @@
+openapi: 3.0.0
+info:
+    version: 1.0.0
+    title: Translator API
+    license:
+        name: MIT
+        url: https://opensource.org/licenses/MIT
+    description: >-
+        This is a sample translator API. You can use this API to translate text from one language to another.
+    contact:
+        name: Pixfar Development Team
+        url: https://pixfar.com
+        email: anamul@pixfar.com
+servers:
+    - description: Local Development
+      url: http://0.0.0.0:6001
+    - description: Mock Server
+      url: http://127.0.0.1:5055/_mock/openapi
+
+tags:
+    - name: Translation
+      description: Translation endpoints (Translate text from one language to another)
+
+paths:
+    # authentication
+    /api/v1/translator:
+        description: Translate text from one language to another
+        post:
+            security: []
+            tags:
+                - Translation
+            summary: Translate text
+            description: Translate text from one language to another
+            operationId: translateText
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/translateTextRequest'
+            responses:
+                '200':
+                    description: Translation successful
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/TranslateTextResponse'
+                '400':
+                    description: Bad request
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/BadRequest'
+                '500':
+                    description: Internal server error
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/InternalServerError'
+
+components:
+    schemas:
+        translateTextRequest:
+            type: object
+            properties:
+                text:
+                    type: string
+                    description: The text to translate
+                    example: Hello, how are you?
+                targetLanguage:
+                    type: string
+                    description: The target language to translate the text
+                    example: fr
+
+        TranslateTextResponse:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    example: 200
+                status:
+                    type: string
+                    example: success
+                data:
+                    type: array
+                    items:
+                        type: string
+                        example: Bonjour, comment ça va?
+
+        BadRequest:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    example: 400
+                error:
+                    type: string
+                    example: Bad request
+                message:
+                    type: string
+                    example: Invalid request
+
+        InternalServerError:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    example: 500
+                error:
+                    type: string
+                    example: Internal server error
+                message:
+                    type: string
+                    example: Internal server error

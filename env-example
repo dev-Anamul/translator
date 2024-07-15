@@ -1,0 +1,7 @@
+NODE_ENV=development
+PORT=6001
+SERVICE_NAME=ticket-service
+
+# Database
+DB_URL=mongodb://<USER>:<PASS>@<HOST>:<PORT>
+DB_NAME=company-service

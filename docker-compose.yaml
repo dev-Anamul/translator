@@ -1,0 +1,52 @@
+services:
+    # api
+    ticket_service:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        ports:
+            - '6001:6001'
+        environment:
+            PORT: 6001
+            NODE_ENV: development
+            SERVICE_NAME: ticket-service
+            DB_NAME: company-servicec
+            DB_URL: mongodb://admin:password@ticket_db:27017
+        volumes:
+            - ./src:/app/src
+        networks:
+            - virtual_desk_network
+
+    # database mongodb
+    ticket_db:
+        image: mongo
+        ports:
+            - '27018:27017'
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: admin
+            MONGO_INITDB_ROOT_PASSWORD: password
+        volumes:
+            - ticket_db_data:/data/db
+        networks:
+            - virtual_desk_network
+
+    # redis cache
+    ticket_cache:
+        image: redis/redis-stack
+        ports:
+            - '6381:6379'
+            - '8002:8001'
+        volumes:
+            - ticket_cache_data:/data
+        networks:
+            - virtual_desk_network
+
+networks:
+    virtual_desk_network:
+        driver: bridge
+
+volumes:
+    ticket_db_data:
+        driver: local
+    ticket_cache_data:
+        driver: local
